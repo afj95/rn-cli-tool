@@ -1,6 +1,6 @@
 {
   "name": "rn-cli-tool",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A custom CLI for React Native screen and component generation",
   "main": "index.js",
   "scripts": {
@@ -22,5 +22,13 @@
   "dependencies": {
     "fs": "^0.0.1-security",
     "path": "^0.12.7"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/afj95/rn-cli-tool.git"
+  },
+  "bugs": {
+    "url": "https://github.com/afj95/rn-cli-tool/issues"
+  },
+  "homepage": "https://github.com/afj95/rn-cli-tool#readme"
 }
