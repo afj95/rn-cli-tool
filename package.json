@@ -1,6 +1,6 @@
 {
   "name": "rn-cli-tool",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A custom CLI for React Native screen and component generation",
   "main": "index.js",
   "scripts": {
