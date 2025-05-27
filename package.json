@@ -1,0 +1,26 @@
+{
+  "name": "rn-cli-tool",
+  "version": "1.0.0",
+  "description": "A custom CLI for React Native screen and component generation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "rn": "./index.js"
+  },
+  "keywords": [
+    "react-native",
+    "cli",
+    "screen",
+    "expo",
+    "tool"
+  ],
+  "author": "Ahmad Jamous",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  }
+}
