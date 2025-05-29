@@ -2,6 +2,8 @@
 
 A developer-friendly CLI tool for React Native projects using **Expo Router** or classic file-based navigation. This tool helps you quickly generate screen files with consistent templates and naming conventions — similar to Laravel's artisan commands.
 
+📦 **NPM:** [https://www.npmjs.com/package/rn-cli-tool](https://www.npmjs.com/package/rn-cli-tool)
+
 ---
 
 ## 🚀 Features

@@ -1,6 +1,6 @@
 {
   "name": "rn-cli-tool",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A custom CLI for React Native screen and component generation",
   "main": "index.js",
   "scripts": {
@@ -19,10 +19,6 @@
   "author": "Ahmad Jamous",
   "license": "MIT",
   "type": "commonjs",
-  "dependencies": {
-    "fs": "^0.0.1-security",
-    "path": "^0.12.7"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/afj95/rn-cli-tool.git"
