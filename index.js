@@ -2,22 +2,58 @@
 
 const fs = require('fs');
 const path = require('path');
+const package = require('./package.json');
+const chalk = require('chalk');
+const figlet = require('figlet');
+
+// Function to display welcome banner
+function showBanner() {
+     console.log(
+          chalk.hex('#61DBFB')(
+               figlet.textSync('RN CLI', {
+                    font: 'Standard',
+                    horizontalLayout: 'default',
+                    verticalLayout: 'default'
+               })
+          )
+     );
+     console.log(chalk.yellow(`  📱 React Native CLI Tool v${package.version}`));
+     console.log(chalk.gray(`  🚀 Generate screens and components with ease`));
+     console.log(chalk.gray(`  👨‍💻 By ${package.author}`));
+     console.log();
+}
 
 const args = process.argv.slice(2);
 
 // Show global help if no command or --help is first
 if (args.length === 0 || ['--help', '-h'].includes(args[0])) {
-     console.log(`
+     showBanner();
+     console.log(chalk.bold.white(`
    Usage:
-     rn create:screen <ScreenName> [--path path] [--tsx]
-     rn create:component <ComponentName> [--path path] [--tsx]
+     rn create:screen <ScreenName> [options] 
+     rn create:component <ComponentName> [options]
    
    Options:
      --path, -p    Target directory (default: current folder)
      --tsx         Generate a .tsx file instead of .js
      --force       Overwrite if file already exists
+     --empty, -e   Create an empty screen
      --help, -h    Show help
-   `);
+     --version, -v Show version
+   `));
+     process.exit(0);
+}
+
+// Show version if --version is first argument
+if (['--version', '-v'].includes(args[0])) {
+     if (args[0] === '--version') {
+          showBanner();
+          console.log(chalk.green(`Version: ${package.version}`));
+          console.log(chalk.gray(`Author: ${package.author}`));
+          console.log(chalk.gray(`License: ${package.license}`));
+     } else {
+          console.log(chalk.green(`Version: ${package.version}`));
+     }
      process.exit(0);
 }
 
@@ -32,7 +68,7 @@ if (fs.existsSync(configPath)) {
           // and store it in the config object
           config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
      } catch (e) {
-          console.error("❌ Failed to parse .rnclirc");
+          console.error(chalk.red("❌ Failed to parse .rnclirc"));
           process.exit(1);
      }
 }
@@ -42,6 +78,7 @@ let targetDir = process.cwd();
 
 let useTsx = getConfig('defaultExtension', 'js') === 'tsx';
 let force = getConfig('useForceByDefault', false);
+let empty = getConfig('useEmptyByDefault', false);
 
 for (let i = 1; i < args.length; i++) {
      switch (args[i]) {
@@ -56,21 +93,28 @@ for (let i = 1; i < args.length; i++) {
                break;
 
           case '--force':
+          case '-f':
                force = true;
+               break;
+
+          case '--empty':
+          case '-e':
+               empty = true;
                break;
 
           case '--help':
           case '-h':
-               console.log(`
+               console.log(chalk.bold.white(`
 Usage:
-  rn create:screen <ScreenName> [--path path]
-  rn create:component <ComponentName> [--path path]
+  rn create:screen <ScreenName> [options]
+  rn create:component <ComponentName> [options]
 
 Options:
   --path, -p    Target directory (default: current folder)
   --help, -h    Show help
   --tsx         Generate a .tsx file instead of .js
-`);
+  --version, -v Show version
+`));
                process.exit(0);
 
           default:
@@ -82,11 +126,12 @@ Options:
 
 function createFileFromTemplate(templateName, outputName, outputPath, placeholder) {
      const extension = useTsx ? 'tsx' : 'js';
+     const emptyFile = empty ? true : false;
      const destPath = path.join(outputPath, `${outputName}.${extension}`);
      const templatePath = path.join(__dirname, 'templates', `${templateName}.tpl`);
 
-     if (fs.existsSync(destPath)) {
-          console.log(`❌ Error: File already exists at ${destPath}`);
+     if (fs.existsSync(destPath) && !force) {
+          console.log(chalk.red(`❌ Error: File already exists at ${destPath}`));
           process.exit(1);
      }
 
@@ -96,13 +141,13 @@ function createFileFromTemplate(templateName, outputName, outputPath, placeholde
      fs.mkdirSync(path.dirname(destPath), { recursive: true });
      fs.writeFileSync(destPath, content);
 
-     console.log(`\x1b[32m✅ ${outputName}.${extension} created at '${destPath}'\x1b[0m`);
+     console.log(chalk.green(`✅ ${outputName}.${extension} created at '${chalk.bold(destPath)}'`));
 
 }
 
 if (command === 'create:screen') {
      if (!name) {
-          console.log('❌ Usage: rn create:screen <ScreenName> [--path path]');
+          console.log(chalk.red('❌ Usage: rn create:screen <ScreenName> [options]'));
           process.exit(1);
      }
 
@@ -110,12 +155,17 @@ if (command === 'create:screen') {
           targetDir = config.screenPath || process.cwd();
      }
 
-     createFileFromTemplate('screen', name, targetDir, 'screenName');
+     if (empty) {
+          createFileFromTemplate('empty', name, targetDir, 'screenName');
+     } else {
+          createFileFromTemplate('screen', name, targetDir, 'screenName');
+     }
+
 }
 
 else if (command === 'create:component') {
      if (!name) {
-          console.log('❌ Usage: rn create:component <ComponentName> [--path path]');
+          console.log(chalk.red('❌ Usage: rn create:component <ComponentName> [options]'));
           process.exit(1);
      }
 
@@ -123,12 +173,16 @@ else if (command === 'create:component') {
           targetDir = config.componentPath || process.cwd();
      }
 
-     createFileFromTemplate('component', name, targetDir, 'componentName');
+     if (empty) {
+          createFileFromTemplate('empty', name, targetDir, 'componentName');
+     } else {
+          createFileFromTemplate('component', name, targetDir, 'componentName');
+     }
 }
 
 else {
-     console.log(`❌ Unknown command: ${command}`);
-     console.log(`Use 'rn --help' for usage info.`);
+     console.log(chalk.red(`❌ Unknown command: ${command}`));
+     console.log(chalk.yellow(`Use 'rn --help' for usage info.`));
      process.exit(1);
 }
 

@@ -1,13 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function {{screenName}}() {
+const {{screenName}} = () => {
   return (
     <View style={styles.container}>
       <Text>{{screenName}}</Text>
     </View>
   );
 }
+
+export default {{screenName}}
 
 const styles = StyleSheet.create({
   container: {

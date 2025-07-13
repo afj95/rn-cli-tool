@@ -11,8 +11,10 @@ A developer-friendly CLI tool for React Native projects using **Expo Router** or
 * Generate screens and components using a simple command
 * Supports nested paths with parentheses (for Expo Router layouts)
 * Generate `.tsx` files using the `--tsx` flag
+* Force overwrite existing files with `--force` flag
+* Create empty template files with `--empty` flag
 * Lightweight and fast — no dependencies
-* Flag support: `--path`, `--tsx`, `--help`
+* Flag support: `--path`, `--tsx`, `--force`, `--empty`, `--help`, `--version`
 
 ---
 
@@ -31,14 +33,25 @@ npm install -g rn-cli-tool
 ### 📄 Create a screen
 
 ```bash
-rn create:screen <ScreenName> [--path path] [--tsx]
+rn create:screen <ScreenName> [options]
 ```
 
 ### 📄 Create a component
 
 ```bash
-rn create:component <ComponentName> [--path path] [--tsx]
+rn create:component <ComponentName> [options]
 ```
+
+### 🔧 Available Options
+
+| Option | Short | Description | Example |
+|--------|-------|-------------|---------|
+| `--path` | `-p` | Target directory (default: current folder) | `--path "app/(auth)"` |
+| `--tsx` | | Generate a .tsx file instead of .js | `--tsx` |
+| `--force` | `-f` | Overwrite if file already exists | `--force` |
+| `--empty` | `-e` | Create an empty screen/component template | `--empty` |
+| `--help` | `-h` | Show help information | `--help` |
+| `--version` | `-v` | Show version information | `--version` |
 
 ### 🧪 Examples
 
@@ -60,16 +73,40 @@ Create a screen as TypeScript:
 rn create:screen SplashScreen --tsx
 ```
 
+Create a screen with force overwrite:
+
+```bash
+rn create:screen HomeScreen --force
+```
+
+Create an empty screen template:
+
+```bash
+rn create:screen LoginScreen --empty
+```
+
 Create a component in `src/components`:
 
 ```bash
 rn create:component Button -p src/components --tsx
 ```
 
+Create an empty component with force overwrite:
+
+```bash
+rn create:component Button --empty --force
+```
+
 Show help:
 
 ```bash
 rn create:screen --help
+```
+
+Show version:
+
+```bash
+rn --version
 ```
 
 ---
@@ -82,6 +119,7 @@ You should place screen templates inside a `templates` folder, like:
 templates/
   screen.tpl
   component.tpl
+  empty.tpl
 ```
 
 The template files use placeholders like `{{screenName}}` or `{{componentName}}`, which will be replaced automatically.
@@ -92,13 +130,15 @@ Example `screen.tpl`:
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function {{screenName}}() {
+const {{screenName}} = () => {
   return (
     <View style={styles.container}>
       <Text>{{screenName}}</Text>
     </View>
   );
 }
+
+export default {{screenName}}
 
 const styles = StyleSheet.create({
   container: {
@@ -115,7 +155,7 @@ Example `component.tpl`:
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function {{componentName}}() {
+const {{componentName}} = () => {
   return (
     <View style={styles.container}>
       <Text>{{componentName}}</Text>
@@ -123,11 +163,27 @@ export default function {{componentName}}() {
   );
 }
 
+export default {{componentName}};
+
 const styles = StyleSheet.create({
   container: {
     padding: 10,
   },
 });
+```
+
+Example `empty.tpl`:
+
+```js
+import React from 'react';
+
+const {{screenName}} = () => {
+  return ();
+}
+
+export default {{screenName}}
+
+const styles = StyleSheet.create({});
 ```
 
 ---
